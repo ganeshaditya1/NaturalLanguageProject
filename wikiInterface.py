@@ -19,17 +19,33 @@ print(plainText)"""
 
 
 def getDisambiguations(word):
-	baseUrl = "https://en.wikipedia.org/w/api.php?"
-	basicParameters = {'action': 'query', 'format': 'json'}
+	baseUrl = "https://simple.wikipedia.org/w/api.php?"
+	basicParameters = {'action': 'query', 'format': 'json', 'utf8': ''}
 	searchUrl = basicParameters.copy()
 	searchUrl['list'] = 'search'
-	searchUrl['srsearch'] = word
-	searchUrl['utf8'] = ''
+	searchUrl['srsearch'] = word.encode('utf-8')
+	searchUrl['srlimit'] = 20
 	finalSearchUrl = baseUrl + urllib.urlencode(searchUrl)
 	searchResultsJson = requests.get(finalSearchUrl)
-	print finalSearchUrl
+	searchResultsArray = json.loads(searchResultsJson.text)
+	results = searchResultsArray["query"]["search"]
+	data = []
+	for result in results:
+		title = result["title"]
+		'''
+		summaryUrl = basicParameters.copy()
+		summaryUrl['prop'] = 'extracts'
+		summaryUrl['exintro'] = ''
+		summaryUrl['explaintext'] = ''
+		summaryUrl['titles'] = title.encode('utf-8')
+		summaryUrlFinal = baseUrl + urllib.urlencode(summaryUrl)
+		summaryJson = requests.get(summaryUrlFinal)
+		summaryArray = json.loads(summaryJson.text)
+		'''
+		data.append(title)
+	return data
 
 
-getDisambiguations('Albert Einstein')
+print(getDisambiguations('Chicago'))
 
 	
