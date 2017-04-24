@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 import re, sys, os, pickle
 
 def computeLinks():
-	return pickle.load(open(pickleLocation, "r"))
+	return pickle.load(open('data/linksData.pk', "r"))
 	tree = ET.parse('data/wikidump.xml')
 	results = {}
 	for page in tree.iterfind('page'):
@@ -29,10 +29,4 @@ def computeLinks():
 		    print(exc_type, fname, exc_tb.tb_lineno)
 	pickle.dump(results, open('data/linksData.pk', 'w'))
 	return results
-
-
-
-			
-
-computeLinks()
 
