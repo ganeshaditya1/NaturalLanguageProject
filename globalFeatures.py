@@ -1,8 +1,8 @@
-from linkScrapper import *
-import math
+
+import math, pickle
 class globalFeatures:
 	def __init__(self):
-		self.linkData = computeLinks()
+		self.linkData = pickle.load(open("data/linksData.pk", "r"))
 	def PMI(self, t1, t2):
 		if(not t1 or not t2):
 			return
