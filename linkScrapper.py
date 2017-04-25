@@ -1,8 +1,9 @@
 import xml.etree.ElementTree as ET
 import re, sys, os, pickle
+import mwparserfromhell
+
 
 def computeLinks():
-	return pickle.load(open('data/linksData.pk', "r"))
 	tree = ET.parse('data/wikidump.xml')
 	results = {}
 	for page in tree.iterfind('page'):
@@ -15,7 +16,18 @@ def computeLinks():
 				inlinks = results[title][0]
 				outlinks = results[title][1]
 
-			links = set(re.findall(r'\[\[(?:[^|\]]*\|)?([^\]]+)\]\]', content))
+			wikicode = mwparserfromhell.parse(content)
+			unfliteredLinks = wikicode.filter_wikilinks()
+			links = set()
+			for link in unfliteredLinks:
+				link = link[2:len(link)-2]
+				if(':' not in link):
+					if('|' in link):
+						links.add(link[:link.index('|')])
+					else:
+						links.add(link)
+
+
 			for link in links:
 				outlinks.add(link)
 				if(link not in results):
@@ -29,4 +41,6 @@ def computeLinks():
 		    print(exc_type, fname, exc_tb.tb_lineno)
 	pickle.dump(results, open('data/linksData.pk', 'w'))
 	return results
+
+
 
