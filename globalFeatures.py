@@ -21,6 +21,8 @@ class globalFeatures:
 		intersection = float(len(t1.intersection(t2)))
 		return (math.log(max(L1, L2)) - math.log(intersection))/(math.log(W) - math.log(min(L1, L2)))
 	def compute(self, t1, t2):
+		if t1 not in self.linkData or t2 not in self.linkData:
+			return [0, 0, 0, 0]
 		t1In = self.linkData[t1][0]
 		t2In = self.linkData[t2][0]		
 		t1Out = self.linkData[t1][1]

@@ -60,11 +60,13 @@ class localFeatures:
 		return np.average(sum)
 
 	def compute(self, text, link, start, end):
-		self.context = self.__contextExtractor__(text, start, end)
-		wikicode = mwparserfromhell.parse(text)
-		self.parsedText = wikicode.strip_code()
-		self.joinedContexts = " ".join(self.contexts[link])
-		return [self.text2text(text, link), self.text2context(text, link), self.context2text(text, link, start, end), self.context2context(text, link, start, end)]
+		if link in self.contexts:
+			self.context = self.__contextExtractor__(text, start, end)
+			wikicode = mwparserfromhell.parse(text)
+			self.parsedText = wikicode.strip_code()
+			self.joinedContexts = " ".join(self.contexts[link])
+			return [self.text2text(text, link), self.text2context(text, link), self.context2text(text, link, start, end), self.context2context(text, link, start, end)]
+		return None
 '''
 import pickle
 A = pickle.load(open("data/parsedArticles.pk", "r"))
